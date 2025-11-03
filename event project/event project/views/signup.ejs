@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="signup.css" />
+  <title>Login / Sign Up</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #9ed5c5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      width: 400px;
+      max-width: 90%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      background: #f5f5f5;
+      padding: 5px;
+      gap: 5px;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1.1em;
+      color: #666;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+    }
+
+    .tabs button.active {
+      background: #9ed5c5;
+      color: white;
+      font-weight: 500;
+    }
+
+    .form-container {
+      padding: 25px;
+    }
+
+    form {
+      display: none;
+    }
+
+    form.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+      font-size: 0.95em;
+    }
+
+    .input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-container i:not(.password-toggle) {
+      position: absolute;
+      left: 12px;
+      color: #666;
+      font-size: 1.2em;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 0;
+      color: #666;
+      font-size: 1.2em;
+      cursor: pointer;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+      color: #9ed5c5;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 45px 12px 40px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    input[type="password"]:focus {
+      border-color: #9ed5c5;
+      background: white;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(77, 208, 225, 0.1);
+    }
+
+    .radio-group {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 12px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      font-size: 0.95em;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: #9ed5c5;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    button[type="submit"]:hover {
+      background: #9ed5c5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 95%;
+      }
+
+      .radio-group {
+        flex-direction: column;
+        gap: 1px;
+      }
+    }
+
+    .error-modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center */
+    width: 50%; /* Take up 50% width */
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    z-index: 9999; /* Make sure it's on top */
+    border-radius: 10px;
+  }
+
+  .error-modal-content {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 16px;
+    position: relative;
+  }
+
+  .error-modal-close {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .error-modal-close:hover {
+    color: black;
+  }
+  </style>
+</head>
+
+<body>
+
+  <!-- Error Modal -->
+  <div id="errorModal" class="error-modal">
+    <div class="error-modal-content">
+      <span class="error-modal-close" onclick="closeErrorModal()">&times;</span>
+      <p id="errorMessageText"></p>
+    </div>
+  </div>
+  <!-- <% if (typeof errorMessage !== 'undefined') { %>
+    <div style="color: red; margin-bottom: 10px;">
+        <strong><%= errorMessage %></strong>
+    </div>
+  <% } %> -->
+  
+  <div class="container">
+    <div class="tabs">
+      <button id="loginTab" class="<%= isLoginActive %>" >Login</button>
+      <button id="signupTab" class="<%= isSignupActive %>" >Sign Up</button>
+    </div>
+    <div class="form-container">
+      <!-- Login Form -->
+      <form id="loginForm" class="<%= isLoginActive %>" method="post" action="/api/auth/login">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <div class="input-container">
+            <i class="bx bx-envelope"></i>
+            <input type="email" id="loginEmail" name="loginEmail" placeholder="Enter your email" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-container">
+            <i class="bx bx-lock-alt"></i>
+            <input type="password" id="loginPassword" name="loginPassword" placeholder="Enter your password" required />
+            <i class="bx bx-hide password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+          </div>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="signupForm" method="post" class="<%= isSignupActive %>" action="/api/auth/signup">
+        
+        <!-- <% if (typeof errorMessage !== 'undefined') { %>
+          <div style="color: red; margin-bottom: 10px;">
+              <strong><%= errorMessage %></strong>
+          </div>
+      <% } %> -->
+        
+      <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <div class="input-container">
+            <i class="bx bx-user"></i>
+            <input type="text" id="fullName" name="name" placeholder="Enter your full name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <div class="input-container">
+            <i class="bx bx-envelope"></i>
+            <input type="email" id="signupEmail" name="signupEmail" placeholder="Enter your email" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phno">Phone Number</label>
+          <div class="input-container">
+            <i class="bx bx-phone"></i>
+            <input type="tel" id="phno" name="phno" placeholder="Enter your phone number" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <div class="input-container">
+            <i class="bx bx-lock-alt"></i>
+            <input type="password" id="signupPassword" name="signupPassword" placeholder="Enter your password" required />
+            <i class="bx bx-hide password-toggle" onclick="togglePassword('signupPassword', this)"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-container">
+            <i class="bx bx-lock-alt"></i>
+            <input type="password" id="confirmPassword" name="signupCPassword" placeholder="Confirm your password" required />
+            <i class="bx bx-hide password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="role" value="event_manager" required />
+              Event Manager
+            </label>
+            <label>
+              <input type="radio" name="role" value="freelancer" />
+              Freelancer
+            </label>
+            <label>
+              <input type="radio" name="role" value="employee" />
+              Employee
+            </label>
+          </div>
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    loginTab.addEventListener("click", () => {
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+    });
+
+    signupTab.addEventListener("click", () => {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      signupForm.classList.add("active");
+      loginForm.classList.remove("active");
+    });
+
+    function togglePassword(id, icon) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("bx-hide");
+        icon.classList.add("bx-show");
+      } else {
+        field.type = "password";
+        icon.classList.remove("bx-show");
+        icon.classList.add("bx-hide");
+      }
+    }
+    const error = "<%= typeof errorMessage !== 'undefined' ? errorMessage : '' %>";
+    if (error) {
+    document.getElementById("errorMessageText").textContent = error;
+    document.getElementById("errorModal").style.display = "block";
+    
+    setTimeout(function() {
+      closeErrorModal();
+    }, 3000);
+  }
+
+  function closeErrorModal() {
+    document.getElementById("errorModal").style.display = "none";
+  }
+  </script>
+</body>
+
+</html>
