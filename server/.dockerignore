@@ -1,0 +1,33 @@
+# Ignore node_modules (it will be installed during Docker build)
+node_modules/
+
+# Ignore .env files containing sensitive environment variables
+.env
+
+# Ignore log files
+*.log
+
+# Ignore test directories or files if not required
+tests/
+test/
+coverage/
+
+# Ignore git files
+.git/
+
+# Ignore Dockerfile and .dockerignore (no need to include in the image)
+Dockerfile
+.dockerignore
+
+# Ignore temporary or IDE/editor settings
+.vscode/
+.idea/
+
+# Ignore any directories related to upload or cache if not needed in the container
+uploads/
+tmp/
+.cache/
+
+# Ignore local build artifacts if any
+dist/
+build/
